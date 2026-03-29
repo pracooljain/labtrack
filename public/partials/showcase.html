@@ -1,0 +1,51 @@
+<div class="container mt-4">
+  <div class="text-center mb-4">
+    <h4>🏆 Research Showcase Wall</h4>
+    <p class="text-muted">Celebrating completed research</p>
+  </div>
+
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-6">
+      <input type="text" class="form-control"
+             placeholder="Search by title..."
+             ng-model="search">
+    </div>
+  </div>
+
+  <div class="text-center mt-5" ng-if="loading">
+    <div class="spinner-border" role="status"></div>
+  </div>
+
+  <div class="row" ng-if="!loading">
+    <div class="col-md-6 col-lg-4 mb-4"
+         ng-repeat="s in showcases | filter: filterShowcases">
+      <div class="card h-100 shadow-sm showcase-card">
+        <div class="card-body">
+          <h6 class="card-title">{{ s.title }}</h6>
+          <p class="card-text small text-muted">{{ s.abstract }}</p>
+        </div>
+        <div class="card-footer bg-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <small class="text-muted d-block">
+                👤 {{ s.student ? s.student.name : 'Student' }}
+              </small>
+              <small class="text-muted">
+                🎓 {{ s.professor ? s.professor.name : 'Professor' }}
+              </small>
+            </div>
+            <button class="btn btn-sm btn-outline-dark"
+                    ng-click="appreciate(s)">
+              ❤️ {{ s.appreciations }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 text-center text-muted mt-5"
+         ng-if="showcases.length === 0">
+      <h5>No research published yet</h5>
+    </div>
+  </div>
+</div>

@@ -184,4 +184,15 @@ router.post('/status/:applicationId', isLoggedIn, isProfessor, async (req, res) 
   }
 });
 
+// GET /applications/api — JSON endpoint for AngularJS
+router.get('/api', isLoggedIn, isStudent, async (req, res) => {
+  try {
+    const applications = await Application.find({ student: req.session.userId })
+      .populate('opportunity')
+      .sort({ createdAt: -1 });
+    res.json(applications);
+  } catch (err) {
+    res.json([]);
+  }
+});
 module.exports = router;

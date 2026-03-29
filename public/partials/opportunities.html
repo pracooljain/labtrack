@@ -1,0 +1,46 @@
+<div class="container mt-4">
+  <h4 class="mb-3">Research Opportunities</h4>
+
+  <div class="mb-3">
+    <input type="text" class="form-control"
+           placeholder="Search opportunities..."
+           ng-model="search">
+  </div>
+
+  <div class="text-center mt-5" ng-if="loading">
+    <div class="spinner-border" role="status"></div>
+  </div>
+
+  <div class="row" ng-if="!loading">
+    <div class="col-md-6 col-lg-4 mb-4"
+         ng-repeat="opp in opportunities | filter: filterOpportunities">
+      <div class="card h-100 shadow-sm opp-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <h6 class="card-title">{{ opp.title }}</h6>
+            <span class="badge bg-success" ng-if="opp.hasStipend">Stipend</span>
+          </div>
+          <p class="text-muted small mb-1">📚 {{ opp.domain }}</p>
+          <p class="text-muted small mb-2">⏱️ {{ opp.duration }}</p>
+          <p class="card-text small">{{ opp.description.substring(0, 100) }}...</p>
+          <div class="mb-2">
+            <span class="badge bg-secondary me-1"
+                  ng-repeat="skill in opp.requiredSkills">
+              {{ skill }}
+            </span>
+          </div>
+          <p class="small text-muted">👥 Slots: {{ opp.slotsAvailable }}</p>
+        </div>
+        <div class="card-footer bg-white">
+          <a href="/applications/apply/{{ opp._id }}"
+             class="btn btn-outline-dark btn-sm w-100">Apply Now</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 text-center text-muted mt-5"
+         ng-if="opportunities.length === 0">
+      <h5>No opportunities found</h5>
+    </div>
+  </div>
+</div>

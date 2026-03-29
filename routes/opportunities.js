@@ -90,4 +90,15 @@ router.get('/search', isLoggedIn, async (req, res) => {
   }
 });
 
+// GET /opportunities/api — JSON endpoint for AngularJS
+router.get('/api', isLoggedIn, async (req, res) => {
+  try {
+    const opportunities = await Opportunity.find({ isActive: true })
+      .populate('postedBy', 'name')
+      .sort({ createdAt: -1 });
+    res.json(opportunities);
+  } catch (err) {
+    res.json([]);
+  }
+});
 module.exports = router;

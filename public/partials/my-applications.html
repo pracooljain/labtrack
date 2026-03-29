@@ -1,0 +1,32 @@
+<div class="container mt-4">
+  <h4 class="mb-4">My Applications</h4>
+
+  <div class="text-center mt-5" ng-if="loading">
+    <div class="spinner-border" role="status"></div>
+  </div>
+
+  <div ng-if="!loading">
+    <div class="text-center text-muted mt-5" ng-if="applications.length === 0">
+      <h5>No applications yet</h5>
+      <a href="/opportunities" class="btn btn-dark mt-3">Browse Opportunities</a>
+    </div>
+
+    <div class="card mb-3 shadow-sm" ng-repeat="app in applications">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <h6>{{ app.opportunity ? app.opportunity.title : 'Opportunity removed' }}</h6>
+          <span class="badge status-badge status-{{ app.status.toLowerCase() }}">
+            {{ app.status }}
+          </span>
+        </div>
+        <p class="text-muted small">
+          Applied on {{ app.createdAt | date:'mediumDate' }}
+        </p>
+        <p class="small">{{ app.sop.substring(0, 150) }}...</p>
+        <div class="alert alert-info small mb-0" ng-if="app.feedback">
+          <strong>Feedback:</strong> {{ app.feedback }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

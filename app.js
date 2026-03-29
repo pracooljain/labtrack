@@ -7,6 +7,7 @@ const MongoStore = require('connect-mongo').default;
 const mongoose = require('mongoose');
 const path = require('path');
 const connectDB = require('./config/db');
+const { isLoggedIn } = require('./middleware/auth');
 
 const app = express();
 
@@ -53,6 +54,10 @@ app.use('/admin', adminRoutes);
 app.use('/resources', resourceRoutes);
 app.use('/milestones', milestoneRoutes);
 app.use('/showcase', showcaseRoutes);
+
+app.get('/spa', isLoggedIn, (req, res) => {
+  res.render('angular-app', { user: req.session });
+});
 
 app.get('/', (req, res) => {
   res.redirect('/opportunities');

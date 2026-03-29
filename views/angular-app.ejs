@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="labtrackApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LabTrack — SPA</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#!/opportunities">🔬 LabTrack</a>
+    <div class="d-flex gap-2">
+      <a href="#!/opportunities" class="btn btn-outline-light btn-sm">Opportunities</a>
+      <a href="#!/my-applications" class="btn btn-outline-light btn-sm">My Applications</a>
+      <a href="#!/showcase" class="btn btn-outline-light btn-sm">🏆 Showcase</a>
+      <a href="/auth/logout" class="btn btn-danger btn-sm">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<!-- AngularJS renders each view here -->
+<div ng-view></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+
+<!-- AngularJS and ngRoute -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular-route.min.js"></script>
+
+<!-- Our AngularJS app -->
+<script src="/js/angular-app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<%- include('../partials/header', { user }) %>
+
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-body p-4">
+          <h4 class="mb-4">🏆 Publish Research to Showcase</h4>
+
+          <% if (error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+          <% } %>
+
+          <form action="/showcase/add" method="POST">
+
+            <div class="mb-3">
+              <label class="form-label">Research Title</label>
+              <input type="text" name="title" class="form-control"
+                     placeholder="Title of the completed research" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Abstract</label>
+              <textarea name="abstract" class="form-control" rows="5"
+                        placeholder="Brief summary of the research, findings, and outcomes..."
+                        required></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Opportunity</label>
+              <select name="opportunityId" class="form-select" required>
+                <option value="">-- Select Opportunity --</option>
+                <% opportunities.forEach(opp => { %>
+                  <option value="<%= opp._id %>"><%= opp.title %></option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Student ID</label>
+              <input type="text" name="studentId" class="form-control"
+                     placeholder="Paste the student's MongoDB ID" required>
+              <small class="text-muted">
+                Find this in the Application Manager next to the student's name
+              </small>
+            </div>
+
+            <button type="submit" class="btn btn-dark w-100">
+              Publish to Showcase Wall
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

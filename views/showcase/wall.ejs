@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LabTrack - Showcase Wall</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="/opportunities">🔬 LabTrack</a>
+    <div>
+      <a href="/showcase" class="navbar-brand text-white fw-bold">🏆 Showcase Wall</a>
+      <a href="/opportunities" class="btn btn-outline-light btn-sm ms-2">Dashboard</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <div class="text-center mb-5">
+    <h3>🏆 Research Showcase Wall</h3>
+    <p class="text-muted">Celebrating completed research from our community</p>
+  </div>
+  <div id="showcase-root"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script>
+  var SHOWCASE_DATA = JSON.parse('<%- JSON.stringify(showcases).replace(/\\/g, "\\\\").replace(/'/g, "\\'") %>');
+</script>
+
+<script type="text/babel">
+const { useState } = React;
+
+function ShowcaseCard({ item }) {
+  const [likes, setLikes] = useState(item.appreciations || 0);
+  const [liked, setLiked] = useState(false);
+
+  const handleAppreciate = () => {
+    fetch('/showcase/appreciate/' + item._id, { method: 'POST' })
+      .then(r => r.json())
+      .then(res => {
+        if (res.success) {
+          setLikes(res.appreciations);
+          setLiked(res.liked);
+        }
+      });
+  };
+
+  return (
+    <div className="col-md-6 col-lg-4 mb-4">
+      <div className="card h-100 shadow-sm showcase-card">
+        <div className="card-body">
+          <span className="badge bg-secondary mb-2">
+            {item.opportunity ? item.opportunity.domain : 'Research'}
+          </span>
+          <h6 className="card-title">{item.title}</h6>
+          <p className="card-text small text-muted">{item.abstract}</p>
+        </div>
+        <div className="card-footer bg-white">
+          <div className="d-flex justify-content-between align-items-center">
+            <div>
+              <small className="text-muted d-block">
+                👤 {item.student ? item.student.name : 'Student'}
+              </small>
+              <small className="text-muted">
+                🎓 {item.professor ? item.professor.name : 'Professor'}
+              </small>
+            </div>
+            <button
+              onClick={handleAppreciate}
+              className={"btn btn-sm " + (liked ? 'btn-dark' : 'btn-outline-dark')}>
+              ❤️ {likes}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ShowcaseWall() {
+  const [showcases] = useState(window.SHOWCASE_DATA || []);
+  const [search, setSearch] = useState('');
+
+  const filtered = showcases.filter(s =>
+    s.title.toLowerCase().includes(search.toLowerCase()) ||
+    (s.opportunity && s.opportunity.domain.toLowerCase().includes(search.toLowerCase()))
+  );
+
+  return (
+    <div>
+      <div className="row justify-content-center mb-4">
+        <div className="col-md-6">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search by title or domain..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+        </div>
+      </div>
+      {filtered.length === 0 ? (
+        <div className="text-center text-muted mt-5">
+          <h5>No research published yet</h5>
+        </div>
+      ) : (
+        <div className="row">
+          {filtered.map(item => (
+            <ShowcaseCard key={item._id} item={item} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('showcase-root'));
+root.render(<ShowcaseWall />);
+</script>
+
+</body>
+</html>

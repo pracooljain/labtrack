@@ -1,4 +1,4 @@
-<%- include('../partials/header', { user }) %>
+<%- include('../partials/header', { user: user }) %>
 
 <div class="container mt-4">
 
@@ -9,18 +9,13 @@
     <% } %>
   </div>
 
-  
   <div class="card mb-4 p-3">
     <div class="row g-2">
-
-      
       <div class="col-md-5">
-        <input type="text" id="liveSearch" class="form-control" 
-               placeholder="Search opportunities..." 
+        <input type="text" id="liveSearch" class="form-control"
+               placeholder="Search opportunities..."
                value="<%= query.search || '' %>">
       </div>
-
-      
       <div class="col-md-3">
         <select id="domainFilter" class="form-select">
           <option value="">All Domains</option>
@@ -32,26 +27,20 @@
           <option value="Bioinformatics">Bioinformatics</option>
         </select>
       </div>
-
-      
       <div class="col-md-2">
         <select id="stipendFilter" class="form-select">
           <option value="">Any Stipend</option>
           <option value="true">With Stipend</option>
         </select>
       </div>
-
       <div class="col-md-2">
         <button class="btn btn-dark w-100" onclick="applyFilters()">Filter</button>
       </div>
-
     </div>
   </div>
 
-  
   <div id="searchResults"></div>
 
-  
   <div class="row" id="opportunityCards">
     <% if (opportunities.length === 0) { %>
       <div class="col-12 text-center text-muted mt-5">
@@ -59,50 +48,49 @@
       </div>
     <% } %>
 
-    <% opportunities.forEach(opp => { %>
+    <% opportunities.forEach(function(opp) { %>
       <div class="col-md-6 col-lg-4 mb-4">
         <div class="card h-100 shadow-sm opp-card">
           <div class="card-body">
-
             <div class="d-flex justify-content-between">
               <h6 class="card-title"><%= opp.title %></h6>
               <% if (opp.hasStipend) { %>
                 <span class="badge bg-success">Stipend</span>
               <% } %>
             </div>
-
             <p class="text-muted small mb-1">
               🏛️ <%= opp.postedBy ? opp.postedBy.name : 'Unknown' %>
             </p>
             <p class="text-muted small mb-2">
               📚 <%= opp.domain %> &nbsp;|&nbsp; ⏱️ <%= opp.duration %>
             </p>
-
             <p class="card-text small">
               <%= opp.description.substring(0, 100) %>...
             </p>
-
-        
             <div class="mb-2">
-              <% opp.requiredSkills.forEach(skill => { %>
+              <% opp.requiredSkills.forEach(function(skill) { %>
                 <span class="badge bg-secondary me-1"><%= skill %></span>
-              <% }) %>
+              <% }); %>
             </div>
-
             <p class="small text-muted">
               👥 Slots: <%= opp.slotsAvailable %>
             </p>
-
           </div>
           <div class="card-footer bg-white">
             <% if (user.role === 'student') { %>
-              <a href="/applications/apply/<%= opp._id %>" 
-   class="btn btn-outline-dark btn-sm w-100">Apply Now</a>
+              <a href="/applications/apply/<%= opp._id %>"
+                 class="btn btn-outline-dark btn-sm w-100">Apply Now</a>
+              <a href="/resources/<%= opp._id %>"
+                 class="btn btn-outline-secondary btn-sm w-100 mt-1">📁 Resources</a>
+            <% } %>
+            <% if (user.role === 'professor') { %>
+              <a href="/resources/<%= opp._id %>"
+                 class="btn btn-outline-secondary btn-sm w-100">📁 Resources</a>
             <% } %>
           </div>
         </div>
       </div>
-    <% }) %>
+    <% }); %>
   </div>
 
 </div>

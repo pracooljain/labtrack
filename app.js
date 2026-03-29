@@ -41,12 +41,18 @@ const opportunityRoutes = require('./routes/opportunities');
 const applicationRoutes = require('./routes/applications');
 const notificationRoutes = require('./routes/notifications');
 const adminRoutes = require('./routes/admin');
+const resourceRoutes = require('./routes/resources');
+const milestoneRoutes = require('./routes/milestones');
+const showcaseRoutes = require('./routes/showcase');
 
 app.use('/auth', authRoutes);
 app.use('/opportunities', opportunityRoutes);
 app.use('/applications', applicationRoutes);
 app.use('/notifications', notificationRoutes);
 app.use('/admin', adminRoutes);
+app.use('/resources', resourceRoutes);
+app.use('/milestones', milestoneRoutes);
+app.use('/showcase', showcaseRoutes);
 
 app.get('/', (req, res) => {
   res.redirect('/opportunities');

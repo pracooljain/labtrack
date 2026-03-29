@@ -126,3 +126,35 @@ body {
   background-color: #0d6efd;
   margin-right: 6px;
 }
+
+/* Showcase card */
+.showcase-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid #e0e0e0;
+}
+.showcase-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important;
+}
+
+/* Appreciate button animation */
+.appreciate-animate {
+  transform: scale(1.2);
+  transition: transform 0.3s ease;
+}
+
+/* Milestone card */
+.milestone-card {
+  border-left: 4px solid #dee2e6;
+}
+.milestone-card.border-success {
+  border-left: 4px solid #198754 !important;
+}
+
+/* Comment item */
+.comment-item {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+}

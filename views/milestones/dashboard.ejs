@@ -1,0 +1,184 @@
+<%- include('../partials/header', { user: user }) %>
+
+<div class="container mt-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="mb-1">Progress Dashboard</h4>
+      <p class="text-muted small mb-0">
+        Project: <strong><%= opportunity.title %></strong>
+      </p>
+    </div>
+    <a href="/resources/<%= opportunity._id %>" class="btn btn-outline-dark btn-sm">
+      📁 Resource Vault
+    </a>
+  </div>
+
+  <% if (user.role === 'professor') { %>
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h6 class="mb-3">Add Milestone</h6>
+        <form action="/milestones/<%= opportunity._id %>/add" method="POST">
+          <div class="row g-2">
+            <div class="col-md-3">
+              <input type="text" name="title" class="form-control"
+                     placeholder="Milestone title" required>
+            </div>
+            <div class="col-md-3">
+              <input type="text" name="description" class="form-control"
+                     placeholder="Description (optional)">
+            </div>
+            <div class="col-md-2">
+              <input type="date" name="deadline" class="form-control" required>
+            </div>
+            <div class="col-md-2">
+              <input type="text" name="studentId" class="form-control"
+                     placeholder="Student ID">
+            </div>
+            <div class="col-md-2">
+              <button type="submit" class="btn btn-dark w-100">Add</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  <% } %>
+
+  <% if (milestones.length > 0) { %>
+    <% var completed = milestones.filter(function(m) { return m.isCompleted; }).length; %>
+    <% var percent = Math.round((completed / milestones.length) * 100); %>
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <div class="d-flex justify-content-between mb-1">
+          <span class="small fw-bold">Overall Progress</span>
+          <span class="small text-muted">
+            <%= completed %>/<%= milestones.length %> milestones
+          </span>
+        </div>
+        <div class="progress" style="height: 12px;">
+          <div class="progress-bar bg-dark" style="width: <%= percent %>%">
+            <%= percent %>%
+          </div>
+        </div>
+      </div>
+    </div>
+  <% } %>
+
+  <% if (milestones.length === 0) { %>
+    <div class="text-center text-muted mt-5">
+      <h5>No milestones yet</h5>
+    </div>
+  <% } %>
+
+  <% milestones.forEach(function(milestone) { %>
+    <div class="card mb-4 shadow-sm milestone-card">
+      <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <h6 class="mb-1">
+              <% if (milestone.isCompleted) { %>
+                completed
+              <% } else { %>
+                pending
+              <% } %>
+              <%= milestone.title %>
+            </h6>
+            <% if (user.role === 'professor') { %>
+              <% if (milestone.student) { %>
+                <p class="text-muted small mb-1">
+                  Student: <strong><%= milestone.student.name %></strong>
+                </p>
+              <% } %>
+            <% } %>
+            <p class="text-muted small mb-1">
+              Deadline: <%= new Date(milestone.deadline).toLocaleDateString() %>
+            </p>
+            <% if (milestone.description) { %>
+              <p class="small mb-2"><%= milestone.description %></p>
+            <% } %>
+          </div>
+
+          <% if (user.role === 'student') { %>
+            <% if (!milestone.isCompleted) { %>
+              <form action="/milestones/complete/<%= milestone._id %>" method="POST">
+                <button class="btn btn-success btn-sm">Mark Complete</button>
+              </form>
+            <% } %>
+          <% } %>
+
+          <% if (milestone.isCompleted) { %>
+            <span class="badge bg-success">Completed</span>
+          <% } %>
+        </div>
+
+        <div class="mt-3">
+          <h6 class="small text-muted mb-2">Comments</h6>
+          <div class="comments-list" id="comments-<%= milestone._id %>">
+            <% var mComments = commentsByMilestone[milestone._id.toString()] || []; %>
+            <% mComments.forEach(function(c) { %>
+              <div class="comment-item">
+                <strong class="small"><%= c.author.name %></strong>
+                <span class="badge bg-secondary ms-1" style="font-size:10px">
+                  <%= c.author.role %>
+                </span>
+                <p class="small mb-0"><%= c.text %></p>
+                <small class="text-muted">
+                  <%= new Date(c.createdAt).toLocaleString() %>
+                </small>
+              </div>
+            <% }); %>
+          </div>
+
+          <div class="d-flex gap-2 mt-2">
+            <input type="text"
+                   class="form-control form-control-sm comment-input"
+                   placeholder="Add a comment..."
+                   data-milestone="<%= milestone._id %>">
+            <button class="btn btn-dark btn-sm comment-btn"
+                    data-milestone="<%= milestone._id %>">
+              Send
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  <% }); %>
+
+</div>
+
+<script>
+$(document).ready(function() {
+  $('.comment-btn').on('click', function() {
+    var milestoneId = $(this).data('milestone');
+    var input = $('.comment-input[data-milestone="' + milestoneId + '"]');
+    var text = input.val().trim();
+    if (!text) return;
+    $.ajax({
+      url: '/milestones/comment/' + milestoneId,
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ text: text }),
+      success: function(res) {
+        if (res.success) {
+          var html = '<div class="comment-item">' +
+            '<strong class="small">' + res.comment.author.name + '</strong>' +
+            '<p class="small mb-0">' + res.comment.text + '</p>' +
+            '</div>';
+          $('#comments-' + milestoneId).append(html);
+          input.val('');
+        }
+      }
+    });
+  });
+
+  $('.comment-input').on('keypress', function(e) {
+    if (e.which === 13) {
+      $(this).siblings('.comment-btn').click();
+    }
+  });
+});
+</script>
+
+<%- include('../partials/footer') %>

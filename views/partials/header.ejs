@@ -23,8 +23,26 @@
         <% if (user && user.userId) { %>
           
           <li class="nav-item">
-            <a class="nav-link" href="/opportunities">Opportunities</a>
-          </li>
+  <a class="nav-link" href="/opportunities">Opportunities</a>
+</li>
+
+<% if (user && user.role === 'student') { %>
+<li class="nav-item">
+  <a class="nav-link" href="/applications/my">My Applications</a>
+</li>
+<% } %>
+
+<% if (user && user.role === 'professor') { %>
+<li class="nav-item">
+  <a class="nav-link" href="/applications/manage">Applications</a>
+</li>
+<% } %>
+
+<li class="nav-item">
+  <a class="nav-link" href="/notifications" id="notifLink">
+    🔔 <span id="notifCount" class="badge bg-danger" style="display:none"></span>
+  </a>
+</li>
 
           <% if (user.role === 'professor') { %>
           

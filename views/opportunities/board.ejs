@@ -96,7 +96,8 @@
           </div>
           <div class="card-footer bg-white">
             <% if (user.role === 'student') { %>
-              <button class="btn btn-outline-dark btn-sm w-100">Apply Now</button>
+              <a href="/applications/apply/<%= opp._id %>" 
+   class="btn btn-outline-dark btn-sm w-100">Apply Now</a>
             <% } %>
           </div>
         </div>

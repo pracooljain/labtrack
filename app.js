@@ -38,11 +38,15 @@ app.use(session({
 
 const authRoutes = require('./routes/auth');
 const opportunityRoutes = require('./routes/opportunities');
-
+const applicationRoutes = require('./routes/applications');
+const notificationRoutes = require('./routes/notifications');
+const adminRoutes = require('./routes/admin');
 
 app.use('/auth', authRoutes);
 app.use('/opportunities', opportunityRoutes);
-
+app.use('/applications', applicationRoutes);
+app.use('/notifications', notificationRoutes);
+app.use('/admin', adminRoutes);
 
 app.get('/', (req, res) => {
   res.redirect('/opportunities');

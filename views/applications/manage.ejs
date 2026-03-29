@@ -1,0 +1,95 @@
+<%- include('../partials/header', { user }) %>
+
+<div class="container mt-4">
+
+  <h4 class="mb-4">Application Manager</h4>
+
+  <% if (applications.length === 0) { %>
+    <div class="text-center text-muted mt-5">
+      <h5>No applications received yet</h5>
+      <a href="/opportunities/post" class="btn btn-dark mt-3">Post an Opportunity</a>
+    </div>
+  <% } %>
+
+  <% applications.forEach(app => { %>
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <h6 class="mb-1"><%= app.student.name %></h6>
+            <p class="text-muted small mb-1"><%= app.student.email %></p>
+            <p class="text-muted small mb-2">
+              Applied for: <strong><%= app.opportunity.title %></strong>
+            </p>
+
+            <!-- Student details -->
+            <% if (app.student.studentProfile) { %>
+              <div class="mb-2">
+                <span class="badge bg-secondary me-1">
+                  CGPA: <%= app.student.studentProfile.cgpa || 'N/A' %>
+                </span>
+                <span class="badge bg-secondary me-1">
+                  <%= app.student.studentProfile.department || 'N/A' %>
+                </span>
+                <span class="badge bg-secondary">
+                  Year <%= app.student.studentProfile.year || 'N/A' %>
+                </span>
+              </div>
+            <% } %>
+          </div>
+
+          <span class="badge status-badge status-<%= app.status.toLowerCase() %>">
+            <%= app.status %>
+          </span>
+        </div>
+
+        <!-- SOP -->
+        <div class="mb-3 p-3 bg-light rounded">
+          <small class="text-muted d-block mb-1"><strong>Statement of Purpose:</strong></small>
+          <p class="small mb-0"><%= app.sop %></p>
+        </div>
+
+        <% if (app.documentUrl) { %>
+          <a href="<%= app.documentUrl %>" target="_blank"
+             class="btn btn-outline-secondary btn-sm mb-3">
+            📄 View Document
+          </a>
+        <% } %>
+
+        <!-- Status update form -->
+        <form action="/applications/status/<%= app._id %>" method="POST">
+          <div class="row g-2 align-items-end">
+
+            <div class="col-md-4">
+              <label class="form-label small">Update Status</label>
+              <select name="status" class="form-select form-select-sm">
+                <% ['Applied','Reviewing','Shortlisted','Accepted','Rejected'].forEach(s => { %>
+                  <option value="<%= s %>" <%= app.status === s ? 'selected' : '' %>>
+                    <%= s %>
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label small">Feedback (optional)</label>
+              <input type="text" name="feedback" class="form-control form-control-sm"
+                placeholder="Add a message for the student..."
+                value="<%= app.feedback || '' %>">
+            </div>
+
+            <div class="col-md-2">
+              <button type="submit" class="btn btn-dark btn-sm w-100">Update</button>
+            </div>
+
+          </div>
+        </form>
+
+      </div>
+    </div>
+  <% }) %>
+
+</div>
+
+<%- include('../partials/footer') %>

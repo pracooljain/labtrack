@@ -53,3 +53,76 @@ body {
   font-weight: bold;
   flex-shrink: 0;
 }
+/* Status badges */
+.status-Applied { background-color: #6c757d; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
+.status-reviewing { background-color: #0dcaf0; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
+.status-shortlisted { background-color: #ffc107; color: black; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
+.status-accepted { background-color: #198754; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
+.status-rejected { background-color: #dc3545; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
+
+/* Status timeline */
+.status-timeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.timeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+.timeline-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background-color: #dee2e6;
+  z-index: 0;
+}
+.timeline-step.done::after,
+.timeline-step.active::after {
+  background-color: #198754;
+}
+.timeline-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #dee2e6;
+  border: 2px solid #dee2e6;
+  z-index: 1;
+}
+.timeline-step.active .timeline-dot {
+  background-color: #198754;
+  border-color: #198754;
+}
+.timeline-step.done .timeline-dot {
+  background-color: #198754;
+  border-color: #198754;
+}
+.timeline-step.rejected .timeline-dot {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+.timeline-label {
+  font-size: 11px;
+  margin-top: 4px;
+  color: #6c757d;
+}
+
+/* Notifications */
+.notification-card.unread {
+  border-left: 4px solid #0d6efd;
+  background-color: #f8f9ff;
+}
+.unread-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #0d6efd;
+  margin-right: 6px;
+}

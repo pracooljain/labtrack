@@ -1,0 +1,124 @@
+<%- include('../partials/header', { user }) %>
+
+<div class="container mt-4">
+
+  <h4 class="mb-4">Admin Panel</h4>
+
+  <!-- Stats cards -->
+  <div class="row mb-4">
+    <div class="col-md-4 mb-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h2 class="text-dark"><%= stats.totalUsers %></h2>
+          <p class="text-muted mb-0">Total Users</p>
+          <small class="text-muted">
+            <%= stats.totalStudents %> students · 
+            <%= stats.totalProfessors %> professors
+          </small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h2 class="text-dark"><%= stats.totalApplications %></h2>
+          <p class="text-muted mb-0">Total Applications</p>
+          <small class="text-muted"><%= stats.activeProjects %> active projects</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h2 class="text-dark"><%= stats.totalOpportunities %></h2>
+          <p class="text-muted mb-0">Total Opportunities</p>
+          <small class="text-muted"><%= stats.activeProjects %> currently active</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Users table -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h5 class="mb-3">All Users</h5>
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Joined</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% users.forEach(u => { %>
+              <tr>
+                <td><%= u.name %></td>
+                <td><%= u.email %></td>
+                <td>
+                  <span class="badge <%= u.role === 'professor' ? 'bg-primary' : 'bg-success' %>">
+                    <%= u.role %>
+                  </span>
+                </td>
+                <td><%= new Date(u.createdAt).toLocaleDateString() %></td>
+                <td>
+                  <form action="/admin/remove-user/<%= u._id %>" method="POST"
+                        onsubmit="return confirm('Remove this user?')">
+                    <button class="btn btn-danger btn-sm">Remove</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Opportunities table -->
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="mb-3">All Opportunities</h5>
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>Title</th>
+              <th>Posted By</th>
+              <th>Domain</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% opportunities.forEach(opp => { %>
+              <tr>
+                <td><%= opp.title %></td>
+                <td><%= opp.postedBy ? opp.postedBy.name : 'Unknown' %></td>
+                <td><%= opp.domain %></td>
+                <td>
+                  <span class="badge <%= opp.isActive ? 'bg-success' : 'bg-danger' %>">
+                    <%= opp.isActive ? 'Active' : 'Inactive' %>
+                  </span>
+                </td>
+                <td>
+                  <form action="/admin/toggle-opportunity/<%= opp._id %>" method="POST">
+                    <button class="btn btn-sm <%= opp.isActive ? 'btn-warning' : 'btn-success' %>">
+                      <%= opp.isActive ? 'Deactivate' : 'Activate' %>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<%- include('../partials/footer') %>

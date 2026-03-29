@@ -1,0 +1,150 @@
+<%- include('../partials/header', { user: session }) %>
+
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+
+      <div class="card shadow">
+        <div class="card-body p-4">
+
+         
+          <div class="d-flex align-items-center mb-4">
+            <div class="profile-avatar me-3">
+              <%= user.name.charAt(0).toUpperCase() %>
+            </div>
+            <div>
+              <h4 class="mb-0"><%= user.name %></h4>
+              <span class="badge bg-dark"><%= user.role %></span>
+            </div>
+          </div>
+
+          
+          <% if (success) { %>
+            <div class="alert alert-success"><%= success %></div>
+          <% } %>
+          <% if (error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+          <% } %>
+
+          <form action="/auth/profile" method="POST">
+
+           
+            <div class="mb-3">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-control" value="<%= user.name %>" disabled>
+              <small class="text-muted">Name cannot be changed</small>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" value="<%= user.email %>" disabled>
+            </div>
+
+          
+            <% if (user.role === 'student') { %>
+
+              <hr><h6 class="mb-3">Student Details</h6>
+
+              <div class="mb-3">
+                <label class="form-label">Skills 
+                  <small class="text-muted">(comma separated)</small>
+                </label>
+                <input type="text" name="skills" class="form-control"
+                  placeholder="e.g. Python, Machine Learning, React"
+                  value="<%= user.studentProfile && user.studentProfile.skills ? user.studentProfile.skills.join(', ') : '' %>">
+              </div>
+
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">CGPA</label>
+                  <input type="number" name="cgpa" class="form-control"
+                    step="0.01" min="0" max="10"
+                    placeholder="e.g. 8.5"
+                    value="<%= user.studentProfile && user.studentProfile.cgpa ? user.studentProfile.cgpa : '' %>">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Department</label>
+                  <select name="department" class="form-select">
+                    <option value="">-- Select --</option>
+                    <% const depts = ['CSE', 'ECE', 'EEE', 'MECH', 'CIVIL', 'IT', 'BIOTECH']; %>
+                    <% depts.forEach(d => { %>
+                      <option value="<%= d %>" 
+                        <%= user.studentProfile && user.studentProfile.department === d ? 'selected' : '' %>>
+                        <%= d %>
+                      </option>
+                    <% }) %>
+                  </select>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Year</label>
+                  <select name="year" class="form-select">
+                    <% [1,2,3,4].forEach(y => { %>
+                      <option value="<%= y %>"
+                        <%= user.studentProfile && user.studentProfile.year === y ? 'selected' : '' %>>
+                        Year <%= y %>
+                      </option>
+                    <% }) %>
+                  </select>
+                </div>
+              </div>
+
+           
+              <div class="mb-4">
+                <label class="form-label">Resume</label>
+                <% if (user.studentProfile && user.studentProfile.resumeUrl) { %>
+                  <div class="mb-2">
+                    <a href="<%= user.studentProfile.resumeUrl %>" 
+                       target="_blank" class="btn btn-outline-success btn-sm">
+                      📄 View Current Resume
+                    </a>
+                  </div>
+                <% } %>
+                <input type="file" name="resume" class="form-control" accept=".pdf">
+                <small class="text-muted">PDF only. Max 5MB.</small>
+              </div>
+
+            <% } %>
+
+            
+            <% if (user.role === 'professor') { %>
+
+              <hr><h6 class="mb-3">Professor Details</h6>
+
+              <div class="mb-3">
+                <label class="form-label">Lab Name</label>
+                <input type="text" name="labName" class="form-control"
+                  placeholder="e.g. AI Research Lab"
+                  value="<%= user.professorProfile && user.professorProfile.labName ? user.professorProfile.labName : '' %>">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Research Domains 
+                  <small class="text-muted">(comma separated)</small>
+                </label>
+                <input type="text" name="domains" class="form-control"
+                  placeholder="e.g. Machine Learning, Computer Vision"
+                  value="<%= user.professorProfile && user.professorProfile.domains ? user.professorProfile.domains.join(', ') : '' %>">
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label">Publications 
+                  <small class="text-muted">(comma separated)</small>
+                </label>
+                <textarea name="publications" class="form-control" rows="3"
+                  placeholder="e.g. Deep Learning for X, Neural Networks for Y"><%= user.professorProfile && user.professorProfile.publications ? user.professorProfile.publications.join(', ') : '' %></textarea>
+              </div>
+
+            <% } %>
+
+            <button type="submit" class="btn btn-dark w-100">Save Profile</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

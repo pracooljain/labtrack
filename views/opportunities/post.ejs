@@ -1,0 +1,77 @@
+<%- include('../partials/header', { user }) %>
+
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+
+      <div class="card shadow">
+        <div class="card-body p-4">
+          <h4 class="mb-4">Post a Research Opportunity</h4>
+
+          <% if (error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+          <% } %>
+
+          <form action="/opportunities/post" method="POST">
+
+            <div class="mb-3">
+              <label class="form-label">Research Title</label>
+              <input type="text" name="title" class="form-control" 
+                     placeholder="e.g. Deep Learning for Medical Imaging" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Domain</label>
+              <select name="domain" class="form-select" required>
+                <option value="">-- Select Domain --</option>
+                <option>Machine Learning</option>
+                <option>Web Development</option>
+                <option>Cybersecurity</option>
+                <option>Data Science</option>
+                <option>Robotics</option>
+                <option>Bioinformatics</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea name="description" class="form-control" rows="4" 
+                        placeholder="Describe the research work..." required></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Required Skills 
+                <small class="text-muted">(comma separated)</small>
+              </label>
+              <input type="text" name="requiredSkills" class="form-control" 
+                     placeholder="e.g. Python, TensorFlow, Statistics">
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Duration</label>
+                <input type="text" name="duration" class="form-control" 
+                       placeholder="e.g. 3 months">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Slots Available</label>
+                <input type="number" name="slotsAvailable" class="form-control" 
+                       value="1" min="1">
+              </div>
+            </div>
+
+            <div class="mb-4 form-check">
+              <input type="checkbox" name="hasStipend" class="form-check-input" id="stipend">
+              <label class="form-check-label" for="stipend">This opportunity includes a stipend</label>
+            </div>
+
+            <button type="submit" class="btn btn-dark w-100">Post Opportunity</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

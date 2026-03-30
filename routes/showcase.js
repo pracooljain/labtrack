@@ -28,14 +28,24 @@ router.get('/', async (req, res) => {
 router.get('/add', isLoggedIn, isProfessor, async (req, res) => {
   try {
     const Opportunity = require('../models/Opportunity');
+    const Application = require('../models/Application');
+
     const opportunities = await Opportunity.find({ postedBy: req.session.userId });
+
+    // Get all accepted students for this professor's opportunities
+    const opportunityIds = opportunities.map(o => o._id);
+    const acceptedApplications = await Application.find({
+      opportunity: { $in: opportunityIds },
+      status: 'Accepted'
+    }).populate('student', 'name email')
+      .populate('opportunity', 'title');
 
     res.render('showcase/add', {
       opportunities,
+      acceptedApplications,
       user: req.session,
       error: null
     });
-
   } catch (err) {
     console.error(err);
     res.redirect('/showcase');
@@ -109,6 +119,17 @@ router.get('/api', async (req, res) => {
 
   } catch (err) {
     res.json([]);
+  }
+});
+
+// POST /showcase/delete/:id — professor deletes showcase
+router.post('/delete/:id', isLoggedIn, isProfessor, async (req, res) => {
+  try {
+    await Showcase.findByIdAndDelete(req.params.id);
+    res.redirect('/showcase');
+  } catch (err) {
+    console.error(err);
+    res.redirect('/showcase');
   }
 });
 

@@ -1,35 +1,38 @@
-// Define the AngularJS app
 var app = angular.module('labtrackApp', ['ngRoute']);
 
-// Configure routes
 app.config(function($routeProvider, $locationProvider) {
 
   $routeProvider
 
-    // Opportunities board
     .when('/opportunities', {
       templateUrl: '/partials/opportunities.html',
       controller: 'OpportunitiesCtrl'
     })
 
-    // My applications (student)
     .when('/my-applications', {
       templateUrl: '/partials/my-applications.html',
       controller: 'MyApplicationsCtrl'
     })
 
-    // Showcase wall
     .when('/showcase', {
       templateUrl: '/partials/showcase.html',
       controller: 'ShowcaseCtrl'
     })
 
-    // Default route
+    .when('/notifications', {
+      templateUrl: '/partials/notifications.html',
+      controller: 'NotificationsCtrl'
+    })
+
+    .when('/profile', {
+      templateUrl: '/partials/profile.html',
+      controller: 'ProfileCtrl'
+    })
+
     .otherwise({
       redirectTo: '/opportunities'
     });
 
-  // Use hash-based URLs e.g. /#/opportunities
   $locationProvider.hashPrefix('!');
 });
 
@@ -39,7 +42,6 @@ app.controller('OpportunitiesCtrl', function($scope, $http) {
   $scope.search = '';
   $scope.loading = true;
 
-  // Fetch opportunities from our REST API
   $http.get('/opportunities/api').then(function(res) {
     $scope.opportunities = res.data;
     $scope.loading = false;
@@ -47,7 +49,6 @@ app.controller('OpportunitiesCtrl', function($scope, $http) {
     $scope.loading = false;
   });
 
-  // Filter opportunities by search
   $scope.filterOpportunities = function(opp) {
     if (!$scope.search) return true;
     var s = $scope.search.toLowerCase();
@@ -82,19 +83,62 @@ app.controller('ShowcaseCtrl', function($scope, $http) {
     $scope.loading = false;
   });
 
-  // Appreciate a showcase
   $scope.appreciate = function(showcase) {
     $http.post('/showcase/appreciate/' + showcase._id).then(function(res) {
       if (res.data.success) {
         showcase.appreciations = res.data.appreciations;
+        // jQuery animation
+        $('#appreciate-' + showcase._id).addClass('pulse');
+        setTimeout(function() {
+          $('#appreciate-' + showcase._id).removeClass('pulse');
+        }, 300);
       }
     });
   };
 
-  // Filter showcases by search
   $scope.filterShowcases = function(s) {
     if (!$scope.search) return true;
     var q = $scope.search.toLowerCase();
     return s.title.toLowerCase().includes(q);
   };
+});
+
+// Notifications Controller
+app.controller('NotificationsCtrl', function($scope, $http) {
+  $scope.notifications = [];
+  $scope.loading = true;
+
+  $http.get('/notifications/api').then(function(res) {
+    $scope.notifications = res.data;
+    $scope.loading = false;
+  }).catch(function() {
+    $scope.loading = false;
+  });
+
+  $scope.markRead = function(notification) {
+    $http.post('/notifications/read/' + notification._id).then(function() {
+      notification.isRead = true;
+    });
+  };
+
+  $scope.markAllRead = function() {
+    $http.post('/notifications/read-all').then(function() {
+      $scope.notifications.forEach(function(n) {
+        n.isRead = true;
+      });
+    });
+  };
+});
+
+// Profile Controller
+app.controller('ProfileCtrl', function($scope, $http) {
+  $scope.profile = null;
+  $scope.loading = true;
+
+  $http.get('/auth/profile/api').then(function(res) {
+    $scope.profile = res.data;
+    $scope.loading = false;
+  }).catch(function() {
+    $scope.loading = false;
+  });
 });

@@ -64,9 +64,11 @@ router.post('/register', async (req, res) => {
     });
 
     
-    req.session.userId = user._id;
-    req.session.role = user.role;
-    req.session.name = user.name;
+   // Save user info in session
+req.session.userId = user._id;
+req.session.role = user.role;
+req.session.name = user.name;
+req.session.email = user.email;
 
     
     res.redirect('/opportunities');
@@ -95,9 +97,11 @@ router.post('/login', async (req, res) => {
     }
 
     
-    req.session.userId = user._id;
-    req.session.role = user.role;
-    req.session.name = user.name;
+    // Save user info in session
+req.session.userId = user._id;
+req.session.role = user.role;
+req.session.name = user.name;
+req.session.email = user.email;
 
     res.redirect('/opportunities');
 
@@ -164,6 +168,16 @@ router.post('/profile', isLoggedIn, upload.single('resume'), async (req, res) =>
     console.error(err);
     const user = await User.findById(req.session.userId);
     res.render('auth/profile', { user, session: req.session, error: 'Something went wrong', success: null });
+  }
+});
+
+// GET /auth/profile/api — for AngularJS
+router.get('/profile/api', isLoggedIn, async (req, res) => {
+  try {
+    const user = await User.findById(req.session.userId).select('-password');
+    res.json(user);
+  } catch (err) {
+    res.json(null);
   }
 });
 

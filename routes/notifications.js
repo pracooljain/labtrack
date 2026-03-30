@@ -59,4 +59,16 @@ router.post('/read-all', isLoggedIn, async (req, res) => {
   }
 });
 
+// GET /notifications/api — for AngularJS
+router.get('/api', isLoggedIn, async (req, res) => {
+  try {
+    const notifications = await Notification.find({
+      recipient: req.session.userId
+    }).sort({ createdAt: -1 });
+    res.json(notifications);
+  } catch (err) {
+    res.json([]);
+  }
+});
+
 module.exports = router;

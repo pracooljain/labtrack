@@ -37,13 +37,20 @@
             </div>
 
             <div class="mb-4">
-              <label class="form-label">Student ID</label>
-              <input type="text" name="studentId" class="form-control"
-                     placeholder="Paste the student's MongoDB ID" required>
-              <small class="text-muted">
-                Find this in the Application Manager next to the student's name
-              </small>
-            </div>
+  <label class="form-label">Select Student</label>
+  <select name="studentId" class="form-select" required>
+    <option value="">-- Select Accepted Student --</option>
+    <% if (acceptedApplications.length === 0) { %>
+      <option disabled>No accepted students yet</option>
+    <% } %>
+    <% acceptedApplications.forEach(function(app) { %>
+      <option value="<%= app.student._id %>">
+        <%= app.student.name %> — <%= app.opportunity.title %>
+      </option>
+    <% }); %>
+  </select>
+  <small class="text-muted">Only accepted students appear here</small>
+</div>
 
             <button type="submit" class="btn btn-dark w-100">
               Publish to Showcase Wall

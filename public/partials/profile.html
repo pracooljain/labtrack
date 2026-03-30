@@ -1,0 +1,45 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+
+      <div class="text-center mt-5" ng-if="loading">
+        <div class="spinner-border" role="status"></div>
+      </div>
+
+      <div class="card shadow" ng-if="!loading && profile">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-4">
+            <div class="profile-avatar me-3">
+              {{ profile.name.charAt(0).toUpperCase() }}
+            </div>
+            <div>
+              <h4 class="mb-0">{{ profile.name }}</h4>
+              <span class="badge bg-dark">{{ profile.role }}</span>
+            </div>
+          </div>
+
+          <p><strong>Email:</strong> {{ profile.email }}</p>
+
+          <div ng-if="profile.role === 'student'">
+            <hr>
+            <h6>Student Details</h6>
+            <p><strong>Department:</strong> {{ profile.studentProfile.department || 'Not set' }}</p>
+            <p><strong>CGPA:</strong> {{ profile.studentProfile.cgpa || 'Not set' }}</p>
+            <p><strong>Year:</strong> {{ profile.studentProfile.year || 'Not set' }}</p>
+            <p><strong>Skills:</strong> {{ profile.studentProfile.skills.join(', ') || 'Not set' }}</p>
+          </div>
+
+          <div ng-if="profile.role === 'professor'">
+            <hr>
+            <h6>Professor Details</h6>
+            <p><strong>Lab:</strong> {{ profile.professorProfile.labName || 'Not set' }}</p>
+            <p><strong>Domains:</strong> {{ profile.professorProfile.domains.join(', ') || 'Not set' }}</p>
+          </div>
+
+          <a href="/auth/profile" class="btn btn-dark mt-2">Edit Profile</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

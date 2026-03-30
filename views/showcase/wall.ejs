@@ -14,6 +14,9 @@
     <a class="navbar-brand fw-bold" href="/opportunities">🔬 LabTrack</a>
     <div>
       <a href="/showcase" class="navbar-brand text-white fw-bold">🏆 Showcase Wall</a>
+      <% if (user && user.role === 'professor') { %>
+        <a href="/showcase/add" class="btn btn-outline-light btn-sm ms-2">+ Publish Research</a>
+      <% } %>
       <a href="/opportunities" class="btn btn-outline-light btn-sm ms-2">Dashboard</a>
     </div>
   </div>
@@ -34,7 +37,8 @@
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
 <script>
-  var SHOWCASE_DATA = JSON.parse('<%- JSON.stringify(showcases).replace(/\\/g, "\\\\").replace(/'/g, "\\'") %>');
+var SHOWCASE_DATA = <%- JSON.stringify(showcases) %>;
+var CURRENT_USER = <%- JSON.stringify(user) %>;
 </script>
 
 <script type="text/babel">
@@ -51,6 +55,10 @@ function ShowcaseCard({ item }) {
         if (res.success) {
           setLikes(res.appreciations);
           setLiked(res.liked);
+          $('.appreciate-btn-' + item._id).addClass('pulse');
+          setTimeout(() => {
+            $('.appreciate-btn-' + item._id).removeClass('pulse');
+          }, 300);
         }
       });
   };
@@ -75,11 +83,19 @@ function ShowcaseCard({ item }) {
                 🎓 {item.professor ? item.professor.name : 'Professor'}
               </small>
             </div>
-            <button
-              onClick={handleAppreciate}
-              className={"btn btn-sm " + (liked ? 'btn-dark' : 'btn-outline-dark')}>
-              ❤️ {likes}
-            </button>
+            <div className="d-flex gap-2">
+              <button
+                onClick={handleAppreciate}
+                className={"btn btn-sm appreciate-btn-" + item._id + " " + (liked ? 'btn-dark' : 'btn-outline-dark')}>
+                ❤️ {likes}
+              </button>
+              {window.CURRENT_USER && window.CURRENT_USER.role === 'professor' && (
+                <form action={"/showcase/delete/" + item._id} method="POST"
+                      onSubmit={(e) => { if (!window.confirm('Delete this showcase?')) e.preventDefault(); }}>
+                  <button type="submit" className="btn btn-sm btn-outline-danger">🗑️</button>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -92,8 +108,7 @@ function ShowcaseWall() {
   const [search, setSearch] = useState('');
 
   const filtered = showcases.filter(s =>
-    s.title.toLowerCase().includes(search.toLowerCase()) ||
-    (s.opportunity && s.opportunity.domain.toLowerCase().includes(search.toLowerCase()))
+    s.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -103,7 +118,7 @@ function ShowcaseWall() {
           <input
             type="text"
             className="form-control"
-            placeholder="Search by title or domain..."
+            placeholder="Search by title..."
             value={search}
             onChange={e => setSearch(e.target.value)}
           />

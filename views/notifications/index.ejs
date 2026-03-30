@@ -4,7 +4,7 @@
 
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h4>Notifications</h4>
-    <button class="btn btn-outline-dark btn-sm" id="markAllRead">
+    <button onclick="markAllRead()" class="btn btn-sm btn-outline-secondary">
       Mark all as read
     </button>
   </div>
@@ -34,8 +34,8 @@
               </small>
             </div>
             <% if (!n.isRead) { %>
-              <button class="btn btn-sm btn-outline-secondary mark-read-btn"
-                      data-id="<%= n._id %>">
+              <button onclick="markRead('<%= n._id %>')" 
+                class="btn btn-sm btn-outline-secondary">
                 Mark read
               </button>
             <% } %>
@@ -65,3 +65,38 @@ $('#markAllRead').on('click', function() {
 </script>
 
 <%- include('../partials/footer') %>
+
+<script>
+async function markRead(id) {
+  try {
+    const res = await fetch(`/notifications/read/${id}`, {
+      method: 'POST'
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      location.reload(); // refresh page
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+</script>
+<script>
+async function markAllRead() {
+  try {
+    const res = await fetch('/notifications/read-all', {
+      method: 'POST'
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      location.reload();
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+</script>

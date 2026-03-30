@@ -9,7 +9,6 @@ const User = require('../models/User');
 const sendMail = require('../config/mailer');
 const { isLoggedIn, isProfessor, isStudent } = require('../middleware/auth');
 
-// Configure multer for supporting document uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'public/uploads/resumes/');
@@ -31,13 +30,11 @@ const upload = multer({
   }
 });
 
-
 router.post('/apply/:opportunityId', isLoggedIn, isStudent, upload.single('document'), async (req, res) => {
   try {
     const { sop } = req.body;
     const opportunityId = req.params.opportunityId;
 
-    
     const existing = await Application.findOne({
       student: req.session.userId,
       opportunity: opportunityId
@@ -47,7 +44,6 @@ router.post('/apply/:opportunityId', isLoggedIn, isStudent, upload.single('docum
       return res.redirect('/applications/my?error=already_applied');
     }
 
-    
     const application = await Application.create({
       student: req.session.userId,
       opportunity: opportunityId,
@@ -55,10 +51,8 @@ router.post('/apply/:opportunityId', isLoggedIn, isStudent, upload.single('docum
       documentUrl: req.file ? '/uploads/resumes/' + req.file.filename : null
     });
 
-    
     const opportunity = await Opportunity.findById(opportunityId).populate('postedBy');
 
-    
     await Notification.create({
       recipient: opportunity.postedBy._id,
       message: `New application received for "${opportunity.title}" from ${req.session.name}`,
@@ -66,7 +60,6 @@ router.post('/apply/:opportunityId', isLoggedIn, isStudent, upload.single('docum
       link: '/applications/manage'
     });
 
-    
     await sendMail(
       opportunity.postedBy.email,
       `New Application for ${opportunity.title}`,
@@ -146,18 +139,35 @@ router.post('/status/:applicationId', isLoggedIn, isProfessor, async (req, res) 
   try {
     const { status, feedback } = req.body;
 
+    console.log('--- STATUS UPDATE ---');
+    console.log('Status received:', status);
+    console.log('Status type:', typeof status);
+
     const application = await Application.findById(req.params.applicationId)
       .populate('student')
       .populate('opportunity');
 
     if (!application) return res.redirect('/applications/manage');
 
-    
+    console.log('Opportunity ID:', application.opportunity._id);
+    console.log('Current slots:', application.opportunity.slotsAvailable);
+
     application.status = status;
     application.feedback = feedback || null;
     await application.save();
 
-    
+    if (status === 'Accepted') {
+      console.log('Accepted! Decreasing slots...');
+      const updated = await Opportunity.findByIdAndUpdate(
+        application.opportunity._id,
+        { $inc: { slotsAvailable: -1 } },
+        { new: true }
+      );
+      console.log('New slots after update:', updated.slotsAvailable);
+    } else {
+      console.log('Status did not match Accepted, skipping slot update');
+    }
+
     await Notification.create({
       recipient: application.student._id,
       message: `Your application for "${application.opportunity.title}" is now ${status}`,
@@ -165,7 +175,6 @@ router.post('/status/:applicationId', isLoggedIn, isProfessor, async (req, res) 
       link: '/applications/my'
     });
 
-    
     await sendMail(
       application.student.email,
       `Application Update — ${application.opportunity.title}`,
@@ -184,7 +193,6 @@ router.post('/status/:applicationId', isLoggedIn, isProfessor, async (req, res) 
   }
 });
 
-// GET /applications/api — JSON endpoint for AngularJS
 router.get('/api', isLoggedIn, isStudent, async (req, res) => {
   try {
     const applications = await Application.find({ student: req.session.userId })
@@ -195,4 +203,5 @@ router.get('/api', isLoggedIn, isStudent, async (req, res) => {
     res.json([]);
   }
 });
+
 module.exports = router;

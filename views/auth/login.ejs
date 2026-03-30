@@ -6,7 +6,7 @@
 
       <div class="card shadow">
         <div class="card-body p-4">
-          <h3 class="card-title text-center mb-4">🔬 LabTrack Login</h3>
+          <h4 class="card-title text-center mb-4">🔬 Enter Credentials</h4>
 
           <% if (error) { %>
             <div class="alert alert-danger"><%= error %></div>
@@ -20,10 +20,24 @@
                      placeholder="Enter your email" required>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-2">
               <label class="form-label">Password</label>
-              <input type="password" name="password" class="form-control" 
-                     placeholder="Enter your password" required>
+
+              <div style="position: relative;">
+                <input type="password" id="loginPassword" name="password" class="form-control" 
+                       placeholder="Enter your password" required>
+
+                <span onclick="toggleLoginPassword()" 
+                      style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer;">
+                  👁️
+                </span>
+              </div>
+            </div>
+
+            <div class="text-end mb-3">
+              <a href="/auth/forgot-password" style="font-size: 0.9rem;">
+                Forgot Password?
+              </a>
             </div>
 
             <button type="submit" class="btn btn-dark w-100">Login</button>
@@ -38,5 +52,12 @@
     </div>
   </div>
 </div>
+
+<script>
+function toggleLoginPassword() {
+  const input = document.getElementById("loginPassword");
+  input.type = input.type === "password" ? "text" : "password";
+}
+</script>
 
 <%- include('../partials/footer') %>

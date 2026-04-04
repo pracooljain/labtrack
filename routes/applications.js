@@ -139,33 +139,23 @@ router.post('/status/:applicationId', isLoggedIn, isProfessor, async (req, res) 
   try {
     const { status, feedback } = req.body;
 
-    console.log('--- STATUS UPDATE ---');
-    console.log('Status received:', status);
-    console.log('Status type:', typeof status);
-
     const application = await Application.findById(req.params.applicationId)
       .populate('student')
       .populate('opportunity');
 
     if (!application) return res.redirect('/applications/manage');
 
-    console.log('Opportunity ID:', application.opportunity._id);
-    console.log('Current slots:', application.opportunity.slotsAvailable);
+    const previousStatus = application.status;
 
     application.status = status;
     application.feedback = feedback || null;
     await application.save();
 
-    if (status === 'Accepted') {
-      console.log('Accepted! Decreasing slots...');
-      const updated = await Opportunity.findByIdAndUpdate(
+    if (status === 'Accepted' && previousStatus !== 'Accepted') {
+      await Opportunity.findByIdAndUpdate(
         application.opportunity._id,
-        { $inc: { slotsAvailable: -1 } },
-        { new: true }
+        { $inc: { slotsAvailable: -1 } }
       );
-      console.log('New slots after update:', updated.slotsAvailable);
-    } else {
-      console.log('Status did not match Accepted, skipping slot update');
     }
 
     await Notification.create({

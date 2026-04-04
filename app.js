@@ -33,7 +33,12 @@ app.use(session({
     mongoUrl: process.env.MONGO_URI,
     touchAfter: 24 * 3600
   }),
-  cookie: { maxAge: 1000 * 60 * 60 * 24 }
+  cookie: { 
+    maxAge: 1000 * 60 * 60 * 24,
+    httpOnly: true,
+    secure: false,
+    sameSite: 'lax'
+  }
 }));
 
 

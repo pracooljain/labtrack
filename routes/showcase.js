@@ -124,11 +124,23 @@ router.get('/api', async (req, res) => {
   }
 });
 
-// POST /showcase/delete/:id — professor deletes showcase
+
 router.post('/delete/:id', isLoggedIn, isProfessor, async (req, res) => {
   try {
+    
+    const showcase = await Showcase.findById(req.params.id);
+    if (!showcase) return res.redirect('/showcase');
+
+    
+    if (showcase.professor.toString() !== req.session.userId) {
+      console.log("Unauthorized delete attempt");
+      return res.redirect('/showcase'); 
+    }
+
+    
     await Showcase.findByIdAndDelete(req.params.id);
     res.redirect('/showcase');
+
   } catch (err) {
     console.error(err);
     res.redirect('/showcase');

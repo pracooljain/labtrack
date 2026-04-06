@@ -89,7 +89,7 @@ function ShowcaseCard({ item }) {
                 className={"btn btn-sm appreciate-btn-" + item._id + " " + (liked ? 'btn-dark' : 'btn-outline-dark')}>
                 ❤️ {likes}
               </button>
-              {window.CURRENT_USER && window.CURRENT_USER.role === 'professor' && (
+              {window.CURRENT_USER && window.CURRENT_USER.role === 'professor' && window.CURRENT_USER.userId === item.professor._id && (
                 <form action={"/showcase/delete/" + item._id} method="POST"
                       onSubmit={(e) => { if (!window.confirm('Delete this showcase?')) e.preventDefault(); }}>
                   <button type="submit" className="btn btn-sm btn-outline-danger">🗑️</button>

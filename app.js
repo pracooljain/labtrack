@@ -76,3 +76,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`LabTrack running at http://localhost:${PORT}`);
 });
+
+module.exports = app;

@@ -3,10 +3,10 @@ const router = express.Router();
 const Showcase = require('../models/Showcase');
 const { isLoggedIn, isProfessor } = require('../middleware/auth');
 
-// GET /showcase — public showcase wall
+
 router.get('/', async (req, res) => {
   try {
-    // Get all showcases sorted by most appreciated
+    
     const showcases = await Showcase.find()
       .populate('student', 'name')
       .populate('professor', 'name')
@@ -24,7 +24,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /showcase/add — show form to add showcase (professor only)
+
 router.get('/add', isLoggedIn, isProfessor, async (req, res) => {
   try {
     const Opportunity = require('../models/Opportunity');
@@ -32,7 +32,7 @@ router.get('/add', isLoggedIn, isProfessor, async (req, res) => {
 
     const opportunities = await Opportunity.find({ postedBy: req.session.userId });
 
-    // Get all accepted students for this professor's opportunities
+    
     const opportunityIds = opportunities.map(o => o._id);
     const acceptedApplications = await Application.find({
       opportunity: { $in: opportunityIds },
@@ -52,16 +52,17 @@ router.get('/add', isLoggedIn, isProfessor, async (req, res) => {
   }
 });
 
-// POST /showcase/add — professor publishes research
 router.post('/add', isLoggedIn, isProfessor, async (req, res) => {
   try {
-    const { title, abstract, opportunityId, studentId } = req.body;
+    const { abstract, opportunityId, studentId } = req.body;
+
+    const opp = await Opportunity.findById(opportunityId);
 
     await Showcase.create({
       opportunity: opportunityId,
       student: studentId,
       professor: req.session.userId,
-      title,
+      title: opp.title,
       abstract
     });
 
@@ -73,22 +74,22 @@ router.post('/add', isLoggedIn, isProfessor, async (req, res) => {
   }
 });
 
-// POST /showcase/appreciate/:id — student appreciates (likes)
+
 router.post('/appreciate/:id', isLoggedIn, async (req, res) => {
   try {
     const showcase = await Showcase.findById(req.params.id);
 
     if (!showcase) return res.json({ success: false });
 
-    // Check if already appreciated
+   
     const alreadyLiked = showcase.appreciatedBy.includes(req.session.userId);
 
     if (alreadyLiked) {
-      // Unlike
+      
       showcase.appreciations -= 1;
       showcase.appreciatedBy.pull(req.session.userId);
     } else {
-      // Like
+      
       showcase.appreciations += 1;
       showcase.appreciatedBy.push(req.session.userId);
     }

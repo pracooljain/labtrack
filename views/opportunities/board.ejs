@@ -78,11 +78,15 @@
           </div>
           <div class="card-footer bg-white">
             <% if (user.role === 'student') { %>
-              <a href="/applications/apply/<%= opp._id %>"
-                 class="btn btn-outline-dark btn-sm w-100">Apply Now</a>
-              <a href="/resources/<%= opp._id %>"
-                 class="btn btn-outline-secondary btn-sm w-100 mt-1">📁 Resources</a>
-            <% } %>
+  <% if (opp.slotsAvailable > 0) { %>
+    <a href="/applications/apply/<%= opp._id %>"
+       class="btn btn-outline-dark btn-sm w-100">Apply Now</a>
+  <% } else { %>
+    <button class="btn btn-secondary btn-sm w-100" disabled>No Slots Available</button>
+  <% } %>
+  <a href="/resources/<%= opp._id %>"
+     class="btn btn-outline-secondary btn-sm w-100 mt-1">📁 Resources</a>
+<% } %>
             <% if (user.role === 'professor') { %>
               <a href="/resources/<%= opp._id %>"
                  class="btn btn-outline-secondary btn-sm w-100">📁 Resources</a>

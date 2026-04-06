@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Showcase = require('../models/Showcase');
+const Opportunity = require('../models/Opportunity');
 const { isLoggedIn, isProfessor } = require('../middleware/auth');
 
 

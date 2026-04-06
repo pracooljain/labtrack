@@ -2,6 +2,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const fs = require('fs');
 const session = require('express-session');
 const MongoStore = require('connect-mongo').default;
 const mongoose = require('mongoose');
@@ -10,8 +11,10 @@ const connectDB = require('./config/db');
 const { isLoggedIn } = require('./middleware/auth');
 
 const app = express();
+const resumeUploadDir = path.join(__dirname, 'public', 'uploads', 'resumes');
 
 connectDB();
+fs.mkdirSync(resumeUploadDir, { recursive: true });
 
 
 app.set('view engine', 'ejs');

@@ -11,12 +11,11 @@ LabTrack is a web-based platform that streamlines collaboration between students
 * 📤 Resume & document upload support
 * 🔬 Research Opportunity Board with live search and filters
 * 📝 Student application system with SOP submission
-* 📋 Professor application manager with status updates
+* 📋 Professor-side application review and status management
 * 📁 Resource Vault for project files and materials
 * 📊 Milestone & Progress Dashboard
 * 🏆 Showcase Wall for completed research
 * 🔔 Real-time Notification Center
-* 🛡️ Admin Panel for platform management
 * 📧 Automated email notifications via Nodemailer
 ---
 
@@ -24,7 +23,7 @@ LabTrack is a web-based platform that streamlines collaboration between students
 
 * **Backend:** Node.js, Express
 * **Database:** MongoDB Atlas, Mongoose
-* **Frontend:** EJS, Bootstrap, jQuery, AngularJS
+* **Frontend:** EJS, Bootstrap, jQuery, React, AngularJS
 * **File Uploads:** Multer
 * **Authentication:** Express Sessions, bcrypt
 * **Email:** Nodemailer
@@ -107,6 +106,20 @@ labtrack/
 ## 📌 Future Enhancements
 
 * Real-time notifications using WebSockets
+* Enhanced admin analytics dashboard
+* Mobile-responsive improvements
+
+---
+
+## 📄 License
+ using WebSockets
+* Enhanced admin analytics dashboard
+* Mobile-responsive improvements
+
+---
+
+## 📄 License
+ using WebSockets
 * Enhanced admin analytics dashboard
 * Mobile-responsive improvements
 

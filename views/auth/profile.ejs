@@ -26,7 +26,7 @@
             <div class="alert alert-danger"><%= error %></div>
           <% } %>
 
-          <form action="/auth/profile" method="POST">
+          <form action="/auth/profile" method="POST" enctype="multipart/form-data">
 
            
             <div class="mb-3">
@@ -102,7 +102,7 @@
                   </div>
                 <% } %>
                 <input type="file" name="resume" class="form-control" accept=".pdf">
-                <small class="text-muted">PDF only. Max 5MB.</small>
+                <small class="text-muted">Only one PDF resume is kept at a time. Max 5MB.</small>
               </div>
 
             <% } %>

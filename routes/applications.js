@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
 const multer = require('multer');
 const path = require('path');
 const Application = require('../models/Application');
@@ -8,10 +9,12 @@ const Opportunity = require('../models/Opportunity');
 const User = require('../models/User');
 const sendMail = require('../config/mailer');
 const { isLoggedIn, isProfessor, isStudent } = require('../middleware/auth');
+const uploadDir = path.join(__dirname, '..', 'public', 'uploads', 'resumes');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads/resumes/');
+    fs.mkdirSync(uploadDir, { recursive: true });
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
     cb(null, 'doc_' + req.session.userId + '_' + Date.now() + '.pdf');

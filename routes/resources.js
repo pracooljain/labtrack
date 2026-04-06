@@ -1,15 +1,19 @@
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
 const multer = require('multer');
+const path = require('path');
 const File = require('../models/File');
 const Opportunity = require('../models/Opportunity');
 const Application = require('../models/Application');
 const { isLoggedIn, isProfessor, isStudent } = require('../middleware/auth');
+const uploadDir = path.join(__dirname, '..', 'public', 'uploads', 'resumes');
 
 // Configure multer for resource uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads/resumes/');
+    fs.mkdirSync(uploadDir, { recursive: true });
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
     cb(null, 'resource_' + Date.now() + '_' + file.originalname);

@@ -30,13 +30,11 @@
             </p>
           </div>
 
-          <!-- Status badge -->
           <span class="badge status-badge status-<%= app.status.toLowerCase() %>">
             <%= app.status %>
           </span>
         </div>
 
-        <!-- Status timeline -->
         <div class="status-timeline mt-3">
           <% const stages = ['Applied', 'Reviewing', 'Shortlisted', 'Accepted']; %>
           <% stages.forEach(stage => { %>
@@ -55,25 +53,10 @@
           <% } %>
         </div>
 
-        <!-- Feedback if any -->
         <% if (app.feedback) { %>
           <div class="alert alert-info mt-3 mb-0 small">
             <strong>Feedback:</strong> <%= app.feedback %>
           </div>
-        <% } %>
-
-        <!-- SOP preview -->
-        <div class="mt-3">
-          <small class="text-muted">
-            <strong>Your SOP:</strong> <%= app.sop.substring(0, 150) %>...
-          </small>
-        </div>
-
-        <% if (app.documentUrl) { %>
-          <a href="<%= app.documentUrl %>" target="_blank" 
-             class="btn btn-outline-secondary btn-sm mt-2">
-            📄 View Document
-          </a>
         <% } %>
 
       </div>

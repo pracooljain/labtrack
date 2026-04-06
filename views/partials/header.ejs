@@ -13,7 +13,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand fw-bold" href="/opportunities">🔬 LabTrack</a>
+    <a class="navbar-brand fw-bold" href="/opportunities">LabTrack</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -23,30 +23,30 @@
         <% if (user && user.userId) { %>
           
           <li class="nav-item">
-  <a class="nav-link" href="/opportunities">Opportunities</a>
-</li>
+            <a class="nav-link" href="/opportunities">Opportunities</a>
+          </li>
 
-<% if (user && user.role === 'student') { %>
-<li class="nav-item">
-  <a class="nav-link" href="/applications/my">My Applications</a>
-</li>
-<% } %>
+          <% if (user && user.role === 'student') { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/applications/my">My Applications</a>
+            </li>
+          <% } %>
 
-<% if (user && user.role === 'professor') { %>
-<li class="nav-item">
-  <a class="nav-link" href="/applications/manage">Applications</a>
-</li>
-<% } %>
+          <% if (user && user.role === 'professor') { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/applications/manage">Applications</a>
+            </li>
+          <% } %>
 
-<li class="nav-item">
-  <a class="nav-link" href="/showcase">🏆 Showcase</a>
-</li>
+          <li class="nav-item">
+            <a class="nav-link" href="/showcase">Showcase</a>
+          </li>
 
-<li class="nav-item">
-  <a class="nav-link" href="/notifications" id="notifLink">
-    🔔 <span id="notifCount" class="badge bg-danger" style="display:none"></span>
-  </a>
-</li>
+          <li class="nav-item">
+            <a class="nav-link" href="/notifications" id="notifLink">
+              Notifications <span id="notifCount" class="badge bg-danger" style="display:none"></span>
+            </a>
+          </li>
 
           <% if (user.role === 'professor') { %>
           
@@ -56,7 +56,7 @@
           <% } %>
 
           <li class="nav-item">
-            <a class="nav-link" href="/auth/profile">👤 <%= user.name %></a>
+            <a class="nav-link" href="/auth/profile"><%= user.name %></a>
           </li>
           <li class="nav-item">
             <a class="nav-link text-danger" href="/auth/logout">Logout</a>

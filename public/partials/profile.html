@@ -27,6 +27,13 @@
             <p><strong>CGPA:</strong> {{ profile.studentProfile.cgpa || 'Not set' }}</p>
             <p><strong>Year:</strong> {{ profile.studentProfile.year || 'Not set' }}</p>
             <p><strong>Skills:</strong> {{ profile.studentProfile.skills.join(', ') || 'Not set' }}</p>
+            <p>
+              <strong>Resume:</strong>
+              <a ng-if="profile.studentProfile.resumeUrl" ng-href="{{ profile.studentProfile.resumeUrl }}" target="_blank">
+                {{ profile.studentProfile.resumeUrl.split('/').pop() }}
+              </a>
+              <span ng-if="!profile.studentProfile.resumeUrl">Not uploaded</span>
+            </p>
           </div>
 
           <div ng-if="profile.role === 'professor'">

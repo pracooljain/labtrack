@@ -59,37 +59,50 @@
               <% } %>
             </div>
             <p class="text-muted small mb-1">
-              🏛️ <%= opp.postedBy ? opp.postedBy.name : 'Unknown' %>
+              Posted by <%= opp.postedBy ? opp.postedBy.name : 'Unknown' %>
             </p>
             <p class="text-muted small mb-2">
-              📚 <%= opp.domain %> &nbsp;|&nbsp; ⏱️ <%= opp.duration %>
+              <%= opp.domain %> | <%= opp.duration %>
             </p>
             <p class="card-text small">
-              <%= opp.description.substring(0, 100) %>...
+              <%= opp.description.length > 100 ? opp.description.substring(0, 100) + '...' : opp.description %>
             </p>
+            <% if (opp.description.length > 100) { %>
+              <button type="button" class="btn btn-dark btn-sm rounded-pill px-3 py-0 mb-3 lh-sm"
+                      data-bs-toggle="modal" data-bs-target="#descriptionModal-<%= opp._id %>">
+                ...
+              </button>
+            <% } %>
             <div class="mb-2">
               <% opp.requiredSkills.forEach(function(skill) { %>
                 <span class="badge bg-secondary me-1"><%= skill %></span>
               <% }); %>
             </div>
             <p class="small text-muted">
-              👥 Remaining Slots: <%= opp.slotsAvailable %>
+              Remaining Slots: <%= opp.slotsAvailable %>
             </p>
           </div>
           <div class="card-footer bg-white">
             <% if (user.role === 'student') { %>
-  <% if (opp.slotsAvailable > 0) { %>
-    <a href="/applications/apply/<%= opp._id %>"
-       class="btn btn-outline-dark btn-sm w-100">Apply Now</a>
-  <% } else { %>
-    <button class="btn btn-secondary btn-sm w-100" disabled>No Slots Available</button>
-  <% } %>
-  <a href="/resources/<%= opp._id %>"
-     class="btn btn-outline-secondary btn-sm w-100 mt-1">📁 Resources</a>
-<% } %>
+              <% if (opp.slotsAvailable > 0) { %>
+                <a href="/applications/apply/<%= opp._id %>"
+                   class="btn btn-outline-dark btn-sm w-100">Apply Now</a>
+              <% } else { %>
+                <button class="btn btn-secondary btn-sm w-100" disabled>No Slots Available</button>
+              <% } %>
+              <a href="/resources/<%= opp._id %>"
+                 class="btn btn-outline-secondary btn-sm w-100 mt-1">Resources</a>
+            <% } %>
+
             <% if (user.role === 'professor') { %>
               <a href="/resources/<%= opp._id %>"
-                 class="btn btn-outline-secondary btn-sm w-100">📁 Resources</a>
+                 class="btn btn-outline-secondary btn-sm w-100">Resources</a>
+              <% if (opp.postedBy && opp.postedBy._id.toString() === user.userId) { %>
+                <form action="/opportunities/delete/<%= opp._id %>" method="POST" class="mt-2"
+                      onsubmit="return confirm('Delete this opportunity?');">
+                  <button type="submit" class="btn btn-outline-danger btn-sm w-100">Delete Opportunity</button>
+                </form>
+              <% } %>
             <% } %>
           </div>
         </div>
@@ -98,5 +111,26 @@
   </div>
 
 </div>
+
+<% opportunities.forEach(function(opp) { %>
+  <% if (opp.description.length > 100) { %>
+    <div class="modal fade" id="descriptionModal-<%= opp._id %>" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"><%= opp.title %></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-2 text-muted small">
+              Posted by <%= opp.postedBy ? opp.postedBy.name : 'Unknown' %>
+            </p>
+            <p class="mb-0"><%= opp.description %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% } %>
+<% }); %>
 
 <%- include('../partials/footer') %>

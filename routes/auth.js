@@ -1,15 +1,29 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const fs = require('fs');
 const User = require('../models/User');
 const { isLoggedIn } = require('../middleware/auth');
 
 const multer = require('multer');
 const path = require('path');
+const uploadDir = path.join(__dirname, '..', 'public', 'uploads', 'resumes');
+
+function deleteStoredResume(resumeUrl) {
+  if (!resumeUrl) return;
+
+  const fileName = path.basename(resumeUrl);
+  const filePath = path.join(uploadDir, fileName);
+
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+  }
+}
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads/resumes/');
+    fs.mkdirSync(uploadDir, { recursive: true });
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
     cb(null, req.session.userId + '_' + Date.now() + '.pdf');
@@ -110,27 +124,47 @@ router.get('/profile', isLoggedIn, async (req, res) => {
   }
 });
 
+router.get('/profile/api', isLoggedIn, async (req, res) => {
+  try {
+    const user = await User.findById(req.session.userId).select('-password -resetToken -resetTokenExpiry');
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to load profile' });
+  }
+});
+
 router.post('/profile', isLoggedIn, upload.single('resume'), async (req, res) => {
   try {
     const user = await User.findById(req.session.userId);
 
     if (user.role === 'student') {
+      const existingStudentProfile = user.studentProfile || {};
+      const previousResumeUrl = existingStudentProfile.resumeUrl || null;
+      const newResumeUrl = req.file
+        ? '/uploads/resumes/' + req.file.filename
+        : previousResumeUrl;
+
+      if (req.file && previousResumeUrl && previousResumeUrl !== newResumeUrl) {
+        deleteStoredResume(previousResumeUrl);
+      }
+
       user.studentProfile = {
-        skills: req.body.skills.split(',').map(s => s.trim()),
+        skills: (req.body.skills || '').split(',').map(s => s.trim()).filter(Boolean),
         cgpa: parseFloat(req.body.cgpa),
         department: req.body.department,
         year: parseInt(req.body.year),
-        resumeUrl: req.file
-          ? '/uploads/resumes/' + req.file.filename
-          : (user.studentProfile ? user.studentProfile.resumeUrl : null)
+        resumeUrl: newResumeUrl || null
       };
     }
 
     if (user.role === 'professor') {
+      const existingProfessorProfile = user.professorProfile || {};
       user.professorProfile = {
+        ...existingProfessorProfile,
         labName: req.body.labName,
-        domains: req.body.domains.split(',').map(d => d.trim()),
-        publications: req.body.publications.split(',').map(p => p.trim())
+        domains: (req.body.domains || '').split(',').map(d => d.trim()).filter(Boolean),
+        publications: (req.body.publications || '').split(',').map(p => p.trim()).filter(Boolean)
       };
     }
 

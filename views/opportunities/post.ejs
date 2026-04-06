@@ -22,15 +22,18 @@
 
             <div class="mb-3">
               <label class="form-label">Domain</label>
-              <select name="domain" class="form-select" required>
+              <select name="domain" class="form-select" id="domainSelect" required>
                 <option value="">-- Select Domain --</option>
-                <option>Machine Learning</option>
-                <option>Web Development</option>
-                <option>Cybersecurity</option>
-                <option>Data Science</option>
-                <option>Robotics</option>
-                <option>Bioinformatics</option>
+                <option value="Machine Learning">Machine Learning</option>
+                <option value="Web Development">Web Development</option>
+                <option value="Cybersecurity">Cybersecurity</option>
+                <option value="Data Science">Data Science</option>
+                <option value="Robotics">Robotics</option>
+                <option value="Bioinformatics">Bioinformatics</option>
+                <option value="__custom__">Other (Enter Custom Domain)</option>
               </select>
+              <input type="text" name="customDomain" id="customDomainInput" class="form-control mt-2 d-none"
+                     placeholder="Enter custom domain">
             </div>
 
             <div class="mb-3">
@@ -73,5 +76,20 @@
     </div>
   </div>
 </div>
+
+<script>
+  const domainSelect = document.getElementById('domainSelect');
+  const customDomainInput = document.getElementById('customDomainInput');
+
+  function toggleCustomDomainField() {
+    const isCustom = domainSelect.value === '__custom__';
+    customDomainInput.classList.toggle('d-none', !isCustom);
+    customDomainInput.required = isCustom;
+    if (!isCustom) customDomainInput.value = '';
+  }
+
+  domainSelect.addEventListener('change', toggleCustomDomainField);
+  toggleCustomDomainField();
+</script>
 
 <%- include('../partials/footer') %>

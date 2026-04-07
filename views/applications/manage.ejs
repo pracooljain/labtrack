@@ -23,7 +23,6 @@
               Applied for: <strong><%= app.opportunity.title %></strong>
             </p>
 
-            <!-- Student details -->
             <% if (app.student.studentProfile) { %>
               <div class="mb-2">
                 <span class="badge bg-secondary me-1">
@@ -57,7 +56,6 @@
           </a>
         <% } %>
 
-        <!-- Status update form -->
         <form action="/applications/status/<%= app._id %>" method="POST">
           <div class="row g-2 align-items-end">
 

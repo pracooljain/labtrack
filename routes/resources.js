@@ -9,7 +9,6 @@ const Application = require('../models/Application');
 const { isLoggedIn, isProfessor, isStudent } = require('../middleware/auth');
 const uploadDir = path.join(__dirname, '..', 'public', 'uploads', 'resumes');
 
-// Configure multer for resource uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     fs.mkdirSync(uploadDir, { recursive: true });
@@ -25,7 +24,6 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB
 });
 
-// GET /resources/:opportunityId — show resource vault for a project
 router.get('/:opportunityId', isLoggedIn, async (req, res) => {
   try {
     const opportunity = await Opportunity.findById(req.params.opportunityId)
@@ -33,12 +31,10 @@ router.get('/:opportunityId', isLoggedIn, async (req, res) => {
 
     if (!opportunity) return res.redirect('/opportunities');
 
-    // Get all files for this opportunity
     const files = await File.find({ opportunity: req.params.opportunityId })
       .populate('uploadedBy', 'name role')
       .sort({ createdAt: -1 });
 
-    // Separate resources and reports
     const resources = files.filter(f => f.fileType === 'resource');
     const reports = files.filter(f => f.fileType === 'report');
 
@@ -55,7 +51,6 @@ router.get('/:opportunityId', isLoggedIn, async (req, res) => {
   }
 });
 
-// POST /resources/:opportunityId/upload — upload a file
 router.post('/:opportunityId/upload', isLoggedIn, upload.single('file'), async (req, res) => {
   try {
     const { description, fileType } = req.body;
@@ -81,7 +76,6 @@ router.post('/:opportunityId/upload', isLoggedIn, upload.single('file'), async (
   }
 });
 
-// POST /resources/delete/:fileId — delete a file
 router.post('/delete/:fileId', isLoggedIn, async (req, res) => {
   try {
     const file = await File.findById(req.params.fileId);

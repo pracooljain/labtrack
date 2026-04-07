@@ -120,7 +120,6 @@ router.get('/search', isLoggedIn, async (req, res) => {
   }
 });
 
-// GET /opportunities/api — JSON endpoint for AngularJS
 router.get('/api', isLoggedIn, async (req, res) => {
   try {
     const opportunities = await Opportunity.find({ isActive: true })

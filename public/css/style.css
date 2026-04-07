@@ -53,14 +53,14 @@ body {
   font-weight: bold;
   flex-shrink: 0;
 }
-/* Status badges */
+
 .status-Applied { background-color: #6c757d; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
 .status-reviewing { background-color: #0dcaf0; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
 .status-shortlisted { background-color: #ffc107; color: black; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
 .status-accepted { background-color: #198754; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
 .status-rejected { background-color: #dc3545; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
 
-/* Status timeline */
+
 .status-timeline {
   display: flex;
   align-items: center;
@@ -113,7 +113,7 @@ body {
   color: #6c757d;
 }
 
-/* Notifications */
+
 .notification-card.unread {
   border-left: 4px solid #0d6efd;
   background-color: #f8f9ff;
@@ -127,7 +127,7 @@ body {
   margin-right: 6px;
 }
 
-/* Showcase card */
+
 .showcase-card {
   transition: transform 0.2s, box-shadow 0.2s;
   border: 1px solid #e0e0e0;
@@ -137,13 +137,13 @@ body {
   box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important;
 }
 
-/* Appreciate button animation */
+
 .appreciate-animate {
   transform: scale(1.2);
   transition: transform 0.3s ease;
 }
 
-/* Milestone card */
+
 .milestone-card {
   border-left: 4px solid #dee2e6;
 }
@@ -151,7 +151,7 @@ body {
   border-left: 4px solid #198754 !important;
 }
 
-/* Comment item */
+
 .comment-item {
   background: #f8f9fa;
   border-radius: 8px;
@@ -159,7 +159,7 @@ body {
   margin-bottom: 8px;
 }
 
-/* Showcase animations */
+
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -173,7 +173,7 @@ body {
 .showcase-card:nth-child(3) { animation-delay: 0.2s; }
 .showcase-card:nth-child(4) { animation-delay: 0.3s; }
 
-/* Like button pulse animation */
+
 @keyframes pulse {
   0% { transform: scale(1); }
   50% { transform: scale(1.2); }

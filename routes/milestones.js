@@ -5,7 +5,6 @@ const Comment = require('../models/Comment');
 const Opportunity = require('../models/Opportunity');
 const { isLoggedIn, isProfessor, isStudent } = require('../middleware/auth');
 
-// GET /milestones/:opportunityId — show progress dashboard
 router.get('/:opportunityId', isLoggedIn, async (req, res) => {
   try {
     const opportunity = await Opportunity.findById(req.params.opportunityId)
@@ -16,25 +15,21 @@ router.get('/:opportunityId', isLoggedIn, async (req, res) => {
     let milestones;
 
     if (req.session.role === 'professor') {
-      // Professor sees all students' milestones
       milestones = await Milestone.find({ opportunity: req.params.opportunityId })
         .populate('student', 'name email')
         .sort({ deadline: 1 });
     } else {
-      // Student sees only their milestones
       milestones = await Milestone.find({
         opportunity: req.params.opportunityId,
         student: req.session.userId
       }).sort({ deadline: 1 });
     }
 
-    // Get comments for each milestone
     const milestoneIds = milestones.map(m => m._id);
     const comments = await Comment.find({ milestone: { $in: milestoneIds } })
       .populate('author', 'name role')
       .sort({ createdAt: 1 });
 
-    // Group comments by milestone id
     const commentsByMilestone = {};
     comments.forEach(c => {
       const key = c.milestone.toString();
@@ -55,7 +50,6 @@ router.get('/:opportunityId', isLoggedIn, async (req, res) => {
   }
 });
 
-// POST /milestones/:opportunityId/add — professor adds milestone
 router.post('/:opportunityId/add', isLoggedIn, isProfessor, async (req, res) => {
   try {
     const { title, description, deadline, studentId } = req.body;
@@ -76,7 +70,6 @@ router.post('/:opportunityId/add', isLoggedIn, isProfessor, async (req, res) => 
   }
 });
 
-// POST /milestones/complete/:milestoneId — student marks complete
 router.post('/complete/:milestoneId', isLoggedIn, isStudent, async (req, res) => {
   try {
     const milestone = await Milestone.findById(req.params.milestoneId);
@@ -94,7 +87,6 @@ router.post('/complete/:milestoneId', isLoggedIn, isStudent, async (req, res) =>
   }
 });
 
-// POST /milestones/comment/:milestoneId — add comment (AJAX)
 router.post('/comment/:milestoneId', isLoggedIn, async (req, res) => {
   try {
     const { text } = req.body;
@@ -107,7 +99,6 @@ router.post('/comment/:milestoneId', isLoggedIn, async (req, res) => {
 
     await comment.populate('author', 'name role');
 
-    // Send back JSON for AJAX
     res.json({
       success: true,
       comment: {

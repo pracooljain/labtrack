@@ -6,12 +6,10 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
   const password = document.getElementById('password');
   const confirmPassword = document.getElementById('confirmPassword');
 
-  // Regex patterns
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const nameRegex = /^[a-zA-Z\s]{3,}$/;
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
 
-  // Validate name
   if (!nameRegex.test(name.value.trim())) {
     name.classList.add('is-invalid');
     name.nextElementSibling.textContent = 'Name must be at least 3 letters';
@@ -20,7 +18,6 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
     name.classList.remove('is-invalid');
   }
 
-  // Validate email
   if (!emailRegex.test(email.value.trim())) {
     email.classList.add('is-invalid');
     valid = false;
@@ -28,7 +25,6 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
     email.classList.remove('is-invalid');
   }
 
-  // Validate password with regex
   if (!passwordRegex.test(password.value)) {
     password.classList.add('is-invalid');
     password.nextElementSibling.textContent = 
@@ -38,7 +34,6 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
     password.classList.remove('is-invalid');
   }
 
-  // Validate passwords match
   if (password.value !== confirmPassword.value) {
     confirmPassword.classList.add('is-invalid');
     confirmPassword.nextElementSibling.textContent = 'Passwords do not match';
@@ -52,7 +47,6 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
   }
 });
 
-// Live validation as user types
 document.addEventListener('DOMContentLoaded', function() {
   const fields = ['name', 'email', 'password', 'confirmPassword'];
   fields.forEach(function(id) {

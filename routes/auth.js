@@ -184,7 +184,6 @@ router.post('/profile', isLoggedIn, upload.single('resume'), async (req, res) =>
   }
 });
 
-// ─── Forgot Password ───────────────────────────────────────
 
 router.get('/forgot-password', (req, res) => {
   res.render('auth/forgot-password', {

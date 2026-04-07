@@ -3,7 +3,6 @@ const router = express.Router();
 const Notification = require('../models/Notification');
 const { isLoggedIn } = require('../middleware/auth');
 
-// GET /notifications — get all notifications for logged in user
 router.get('/', isLoggedIn, async (req, res) => {
   try {
     const notifications = await Notification.find({
@@ -21,7 +20,6 @@ router.get('/', isLoggedIn, async (req, res) => {
   }
 });
 
-// GET /notifications/unread — AJAX polling endpoint
 router.get('/unread', isLoggedIn, async (req, res) => {
   try {
     const notifications = await Notification.find({
@@ -36,7 +34,6 @@ router.get('/unread', isLoggedIn, async (req, res) => {
   }
 });
 
-// POST /notifications/read/:id — mark one as read
 router.post('/read/:id', isLoggedIn, async (req, res) => {
   try {
     await Notification.findByIdAndUpdate(req.params.id, { isRead: true });
@@ -46,7 +43,6 @@ router.post('/read/:id', isLoggedIn, async (req, res) => {
   }
 });
 
-// POST /notifications/read-all — mark all as read
 router.post('/read-all', isLoggedIn, async (req, res) => {
   try {
     await Notification.updateMany(
@@ -59,7 +55,6 @@ router.post('/read-all', isLoggedIn, async (req, res) => {
   }
 });
 
-// GET /notifications/api — for AngularJS
 router.get('/api', isLoggedIn, async (req, res) => {
   try {
     const notifications = await Notification.find({

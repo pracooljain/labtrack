@@ -36,7 +36,6 @@ app.config(function($routeProvider, $locationProvider) {
   $locationProvider.hashPrefix('!');
 });
 
-// Opportunities Controller
 app.controller('OpportunitiesCtrl', function($scope, $http) {
   $scope.opportunities = [];
   $scope.search = '';
@@ -57,7 +56,6 @@ app.controller('OpportunitiesCtrl', function($scope, $http) {
   };
 });
 
-// My Applications Controller
 app.controller('MyApplicationsCtrl', function($scope, $http) {
   $scope.applications = [];
   $scope.loading = true;
@@ -70,7 +68,7 @@ app.controller('MyApplicationsCtrl', function($scope, $http) {
   });
 });
 
-// Showcase Controller
+
 app.controller('ShowcaseCtrl', function($scope, $http) {
   $scope.showcases = [];
   $scope.search = '';
@@ -103,7 +101,6 @@ app.controller('ShowcaseCtrl', function($scope, $http) {
   };
 });
 
-// Notifications Controller
 app.controller('NotificationsCtrl', function($scope, $http) {
   $scope.notifications = [];
   $scope.loading = true;
@@ -130,7 +127,7 @@ app.controller('NotificationsCtrl', function($scope, $http) {
   };
 });
 
-// Profile Controller
+
 app.controller('ProfileCtrl', function($scope, $http) {
   $scope.profile = null;
   $scope.loading = true;

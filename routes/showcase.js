@@ -108,7 +108,6 @@ router.post('/appreciate/:id', isLoggedIn, async (req, res) => {
   }
 });
 
-// GET /showcase/api — JSON endpoint for React component
 router.get('/api', async (req, res) => {
   try {
     const showcases = await Showcase.find()

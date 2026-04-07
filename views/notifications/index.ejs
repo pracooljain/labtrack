@@ -48,7 +48,6 @@
 </div>
 
 <script>
-// Mark single notification as read
 $('.mark-read-btn').on('click', function() {
   const id = $(this).data('id');
   $.post('/notifications/read/' + id, function() {
@@ -56,7 +55,6 @@ $('.mark-read-btn').on('click', function() {
   });
 });
 
-// Mark all as read
 $('#markAllRead').on('click', function() {
   $.post('/notifications/read-all', function() {
     location.reload();

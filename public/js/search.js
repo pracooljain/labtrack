@@ -68,7 +68,6 @@ function applyFilters() {
   window.location.href = url;
 }
 
-// Poll for unread notifications every 10 seconds
 function pollNotifications() {
   $.get('/notifications/unread', function(data) {
     if (data.length > 0) {
@@ -79,6 +78,5 @@ function pollNotifications() {
   });
 }
 
-// Run immediately and then every 10 seconds
 pollNotifications();
 setInterval(pollNotifications, 10000);

@@ -5,7 +5,6 @@ const Opportunity = require('../models/Opportunity');
 const Application = require('../models/Application');
 const { isLoggedIn } = require('../middleware/auth');
 
-// Simple admin check middleware
 const isAdmin = (req, res, next) => {
   if (req.session.email === process.env.ADMIN_EMAIL) {
     next();
@@ -14,7 +13,6 @@ const isAdmin = (req, res, next) => {
   }
 };
 
-// GET /admin — admin dashboard
 router.get('/', isLoggedIn, isAdmin, async (req, res) => {
   try {
     const totalUsers = await User.countDocuments();
@@ -49,7 +47,6 @@ router.get('/', isLoggedIn, isAdmin, async (req, res) => {
   }
 });
 
-// POST /admin/remove-user/:id — remove a user
 router.post('/remove-user/:id', isLoggedIn, isAdmin, async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
@@ -59,7 +56,6 @@ router.post('/remove-user/:id', isLoggedIn, isAdmin, async (req, res) => {
   }
 });
 
-// POST /admin/toggle-opportunity/:id — approve or deactivate posting
 router.post('/toggle-opportunity/:id', isLoggedIn, isAdmin, async (req, res) => {
   try {
     const opp = await Opportunity.findById(req.params.id);

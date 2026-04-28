@@ -112,19 +112,5 @@ labtrack/
 ---
 
 ## 📄 License
- using WebSockets
-* Enhanced admin analytics dashboard
-* Mobile-responsive improvements
-
----
-
-## 📄 License
- using WebSockets
-* Enhanced admin analytics dashboard
-* Mobile-responsive improvements
-
----
-
-## 📄 License
 
 This project is intended for academic and learning purposes.
